@@ -1,0 +1,87 @@
+
+"Start Symbol" = <program>
+
+!--- TERMINAL
+ID = {Letter}({Letter}|{Digit})*
+Number = {Digit}+('.'{Digit}+)?
+
+!--- RULES
+<program> ::= <statements>
+
+<statements> ::=
+            | <statements> <statement>
+
+<statement> ::= <declaration_statement>   
+            | <assignment_state>
+            | <if_state>
+            | <for_state>
+            | <method_declare>
+            | <method_call> ';'
+
+<declaration_statement> ::= 'var' <identifier> <declare_tail>
+
+<declare_tail> ::=
+            | '=' <exp> ';'
+            | ';'
+
+<assignment_state> ::= <identifier> '=' <exp> ';'
+
+<if_state> ::= 'if' '(' <exp> ')' '{' <statements> '}' <elseIf_states> <else_state>
+
+<elseIf_states> ::=
+            | <elseIf_states> 'else' 'if' '(' <exp> ')' '{' <statements> '}'
+
+<else_state> ::=
+            | 'else' '{' <statements> '}'
+
+<for_state> ::= 'for' '(' <declaration_or_exp> ';' <exp> ';' <exp> ')' '{' <statements> '}'
+
+<declaration_or_exp> ::=
+            | <declaration_statement>
+            | <exp>
+
+<method_declare> ::= 'function' <identifier> '(' <params> ')' '{' <statements> '}'
+
+<identifier> ::= ID
+
+<params> ::=
+            | <params> ',' <identifier>
+            | <identifier>
+
+<method_call> ::= <identifier> '(' <args> ')'
+
+<args> ::=
+            | <args> ',' <exp>
+            | <exp>
+
+<exp> ::= <simple_exp> <exp_tail>
+
+<exp_tail> ::=
+            | '==' <simple_exp>
+            | '!=' <simple_exp>
+            | '<=' <simple_exp>
+            | '>=' <simple_exp>
+            | '<' <simple_exp>
+            | '>' <simple_exp>
+            | '&&' <simple_exp>
+            | '||' <simple_exp>
+
+<simple_exp> ::= <term> <simple_exp_tail>
+
+<simple_exp_tail> ::=
+            | '+' <term>
+            | '-' <term>
+
+<term> ::= <factor> <term_tail>
+
+<term_tail> ::=
+            | '*' <factor>
+            | '/' <factor>
+            
+<factor> ::= <num>
+            | <identifier>
+            | '!' <factor>
+            | '(' <exp> ')'
+            | <method_call>
+
+<num> ::= Number
